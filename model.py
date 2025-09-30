@@ -158,8 +158,17 @@ class LLMModel(nn.Module):
         batch_size, seq_len = input_ids.shape
         device = input_ids.device
         
+        # Debug: Check for invalid token IDs
+        if torch.any(input_ids < 0) or torch.any(input_ids >= self.vocab_size):
+            logger.error(f"Invalid token IDs detected: min={input_ids.min()}, max={input_ids.max()}, vocab_size={self.vocab_size}")
+            # Clamp invalid token IDs to valid range
+            input_ids = torch.clamp(input_ids, 0, self.vocab_size - 1)
+        
         # Create position indices
         position_ids = torch.arange(seq_len, device=device).unsqueeze(0).expand(batch_size, -1)
+        
+        # Ensure position_ids are within bounds
+        position_ids = torch.clamp(position_ids, 0, self.max_position_embeddings - 1)
         
         # Embeddings
         token_embeds = self.token_embedding(input_ids)

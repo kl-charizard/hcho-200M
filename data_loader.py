@@ -169,6 +169,20 @@ class LLMDataLoader:
             return_tensors=None  # Return lists instead of tensors
         )
         
+        # Ensure all token IDs are valid
+        input_ids = tokenized['input_ids']
+        for i, ids in enumerate(input_ids):
+            # Replace any invalid token IDs with pad token ID
+            valid_ids = []
+            for token_id in ids:
+                if 0 <= token_id < self.tokenizer.vocab_size:
+                    valid_ids.append(token_id)
+                else:
+                    valid_ids.append(self.tokenizer.pad_token_id if self.tokenizer.pad_token_id is not None else 0)
+            input_ids[i] = valid_ids
+        
+        tokenized['input_ids'] = input_ids
+        
         # For causal LM, labels are the same as input_ids
         tokenized['labels'] = tokenized['input_ids'].copy()
         
