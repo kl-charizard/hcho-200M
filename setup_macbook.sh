@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "🚀 Setting up hcho-200M on MacBook"
+echo "🚀 Setting up hcho-100M on MacBook"
 echo "=================================="
 
 # Check if Python is installed

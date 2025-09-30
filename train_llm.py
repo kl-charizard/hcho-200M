@@ -367,7 +367,7 @@ def main():
     with open(args.config, 'r') as f:
         config = yaml.safe_load(f)
     
-    logger.info("🚀 Starting hcho Training")
+    logger.info("🚀 Starting hcho-100M Training")
     logger.info(f"   Config: {args.config}")
     logger.info(f"   Seed: {args.seed}")
     logger.info(f"   Resume: {args.resume}")

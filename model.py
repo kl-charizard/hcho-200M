@@ -1,6 +1,6 @@
 """
-7B Parameter LLM Model Implementation
-Based on GPT architecture with optimizations for 24GB VRAM
+100M Parameter LLM Model Implementation
+Based on GPT architecture with optimizations for MacBook and Colab
 """
 
 import torch
@@ -102,7 +102,7 @@ class TransformerBlock(nn.Module):
         return x
 
 class LLMModel(nn.Module):
-    """hcho - 7B Parameter LLM Model"""
+    """hcho - 100M Parameter LLM Model"""
     
     def __init__(self, config: dict):
         super().__init__()

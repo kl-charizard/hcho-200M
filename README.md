@@ -1,6 +1,6 @@
-# hcho-200M - Lightweight LLM Training
+# hcho-100M - Lightweight LLM Training
 
-A complete implementation for training hcho-200M, an 89-million parameter Large Language Model optimized for MacBook, Google Colab, and consumer hardware with massive dataset support.
+A complete implementation for training hcho-100M, a 100-million parameter Large Language Model optimized for MacBook, Google Colab, and consumer hardware with massive dataset support.
 
 ## ✨ Features
 
@@ -114,7 +114,7 @@ A complete implementation for training hcho-200M, an 89-million parameter Large 
 
 ```
 hcho-200M/
-├── config.yaml              # Training configuration (89M model)
+├── config.yaml              # Training configuration (100M model)
 ├── ds_config.json           # DeepSpeed configuration
 ├── requirements.txt         # Python dependencies (optimized)
 ├── setup.py                 # Automatic setup script
@@ -123,7 +123,7 @@ hcho-200M/
 ├── run_training_macbook.sh  # MacBook training script
 ├── quantize_and_run_macbook.sh # MacBook quantization and inference
 ├── train_llm.py            # Main training script
-├── model.py                 # 89M parameter model implementation
+├── model.py                 # 100M parameter model implementation
 ├── data_loader.py           # Smart dataset loading with standardization
 ├── quantize_gguf.py         # GGUF quantization script
 ├── inference_gguf.py        # GGUF model inference
@@ -135,11 +135,11 @@ hcho-200M/
 
 ## 🏗️ Model Architecture
 
-- **Parameters**: ~89 million (GPU memory optimized)
+- **Parameters**: ~100 million (optimized for MacBook & Colab)
 - **Architecture**: GPT-style transformer
-- **Hidden Size**: 512
-- **Layers**: 8
-- **Attention Heads**: 8
+- **Hidden Size**: 576
+- **Layers**: 10
+- **Attention Heads**: 9
 - **Context Length**: 512 tokens (memory optimized)
 - **Vocabulary Size**: 50,257
 

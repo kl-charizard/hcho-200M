@@ -1,15 +1,15 @@
 # LLM Training Configuration
-# 200M Parameter Model Configuration (MacBook Optimized)
+# 100M Parameter Model Configuration (MacBook & Colab Optimized)
 
 model:
-  name: "hcho-200m"
+  name: "hcho-100m"
   architecture: "gpt-neo"
   vocab_size: 50257
-  hidden_size: 512  # Reduced from 768
-  num_layers: 8     # Reduced from 12
-  num_heads: 8      # Reduced from 12
+  hidden_size: 576  # Optimized for ~100M parameters
+  num_layers: 10    # Optimized for ~100M parameters
+  num_heads: 9      # Optimized for ~100M parameters
   max_position_embeddings: 1024
-  intermediate_size: 2048  # Reduced from 3072
+  intermediate_size: 2304  # Optimized for ~100M parameters
   dropout: 0.1
   activation: "gelu"
 
@@ -60,8 +60,8 @@ optimization:
 
 logging:
   use_wandb: false  # Set to true if you want to use Weights & Biases
-  project_name: "hcho-200m-training"
-  run_name: "hcho-200m-$(date +%Y%m%d_%H%M%S)"
+  project_name: "hcho-100m-training"
+  run_name: "hcho-100m-$(date +%Y%m%d_%H%M%S)"
 
 output:
   model_dir: "./models"

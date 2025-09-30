@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "🚀 Starting hcho-200M Training on MacBook"
+echo "🚀 Starting hcho-100M Training on MacBook"
 echo "========================================"
 
 # Activate virtual environment
