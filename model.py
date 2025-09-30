@@ -103,6 +103,7 @@ class LLMModel(nn.Module):
     def __init__(self, config: dict):
         super().__init__()
         self.config = config
+        self.gradient_checkpointing = False
         
         # Model dimensions
         self.vocab_size = config['model']['vocab_size']
@@ -149,6 +150,14 @@ class LLMModel(nn.Module):
             torch.nn.init.zeros_(module.bias)
             torch.nn.init.ones_(module.weight)
     
+    def gradient_checkpointing_enable(self):
+        """Enable gradient checkpointing for memory efficiency"""
+        self.gradient_checkpointing = True
+    
+    def gradient_checkpointing_disable(self):
+        """Disable gradient checkpointing"""
+        self.gradient_checkpointing = False
+    
     def count_parameters(self) -> int:
         """Count total number of parameters"""
         return sum(p.numel() for p in self.parameters() if p.requires_grad)
@@ -178,9 +187,17 @@ class LLMModel(nn.Module):
         # Apply dropout
         hidden_states = F.dropout(hidden_states, p=self.dropout, training=self.training)
         
-        # Pass through transformer layers
-        for layer in self.layers:
-            hidden_states = layer(hidden_states, attention_mask)
+        # Pass through transformer layers with optional gradient checkpointing
+        if self.gradient_checkpointing and self.training:
+            # Use gradient checkpointing for memory efficiency
+            for layer in self.layers:
+                hidden_states = torch.utils.checkpoint.checkpoint(
+                    layer, hidden_states, attention_mask, use_reentrant=False
+                )
+        else:
+            # Normal forward pass
+            for layer in self.layers:
+                hidden_states = layer(hidden_states, attention_mask)
         
         # Final layer norm
         hidden_states = self.ln_f(hidden_states)
