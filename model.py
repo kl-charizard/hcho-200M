@@ -46,12 +46,16 @@ class MultiHeadAttention(nn.Module):
         if attention_mask is not None:
             # Reshape attention mask to match scores shape (batch_size, num_heads, seq_len, seq_len)
             attn_mask = attention_mask.unsqueeze(1).unsqueeze(2)  # (batch_size, 1, 1, seq_len)
-            scores = scores.masked_fill(attn_mask == 0, -1e9)
+            # Use a smaller value for FP16 compatibility
+            mask_value = -1e4 if scores.dtype == torch.float16 else -1e9
+            scores = scores.masked_fill(attn_mask == 0, mask_value)
         
         # Causal mask (prevent looking at future tokens)
         causal_mask = torch.tril(torch.ones(seq_len, seq_len, device=x.device))
         causal_mask = causal_mask.unsqueeze(0).unsqueeze(0)  # (1, 1, seq_len, seq_len)
-        scores = scores.masked_fill(causal_mask == 0, -1e9)
+        # Use a smaller value for FP16 compatibility
+        mask_value = -1e4 if scores.dtype == torch.float16 else -1e9
+        scores = scores.masked_fill(causal_mask == 0, mask_value)
         
         # Softmax and dropout
         attn_weights = F.softmax(scores, dim=-1)
