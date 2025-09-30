@@ -1,16 +1,16 @@
 # hcho-200M - Lightweight LLM Training
 
-A complete implementation for training hcho-200M, a 163-million parameter Large Language Model optimized for MacBook, Google Colab, and consumer hardware with massive dataset support.
+A complete implementation for training hcho-200M, an 89-million parameter Large Language Model optimized for MacBook, Google Colab, and consumer hardware with massive dataset support.
 
 ## ✨ Features
 
 - **🚀 Multiple Platforms**: MacBook, Google Colab, Windows, Linux
-- **📊 Massive Dataset**: 717 million tokens from 6+ diverse datasets with smart standardization
+- **📊 Massive Dataset**: 179 million tokens from 6+ diverse datasets with smart standardization
 - **⚡ GPU Acceleration**: Apple Silicon MPS, CUDA, CPU fallback
 - **📈 Progress Monitoring**: Real-time progress bars with speed and loss
 - **🔧 Easy Setup**: One-click installation and training
 - **💾 Model Quantization**: GGUF support for efficient deployment
-- **🎯 Optimized**: 4.4 tokens per parameter for effective training
+- **🎯 Optimized**: 2.0 tokens per parameter for effective training
 - **📱 Mobile Ready**: Quantized models for mobile deployment
 
 ## 🚀 Quick Start
@@ -114,7 +114,7 @@ A complete implementation for training hcho-200M, a 163-million parameter Large 
 
 ```
 hcho-200M/
-├── config.yaml              # Training configuration (163M model)
+├── config.yaml              # Training configuration (89M model)
 ├── ds_config.json           # DeepSpeed configuration
 ├── requirements.txt         # Python dependencies (optimized)
 ├── setup.py                 # Automatic setup script
@@ -123,7 +123,7 @@ hcho-200M/
 ├── run_training_macbook.sh  # MacBook training script
 ├── quantize_and_run_macbook.sh # MacBook quantization and inference
 ├── train_llm.py            # Main training script
-├── model.py                 # 163M parameter model implementation
+├── model.py                 # 89M parameter model implementation
 ├── data_loader.py           # Smart dataset loading with standardization
 ├── quantize_gguf.py         # GGUF quantization script
 ├── inference_gguf.py        # GGUF model inference
@@ -165,7 +165,7 @@ The training script automatically loads multiple large datasets with smart featu
 - **GLUE SST-2**: 50,000 sentiment analysis texts
 - **Fallback**: 50,000 sample texts if online datasets fail
 
-**Total Training Data**: ~350,000 samples × 2,048 tokens = **~717 million tokens** (4.4 tokens per parameter)
+**Total Training Data**: ~350,000 samples × 512 tokens = **~179 million tokens** (2.0 tokens per parameter)
 
 **Note**: All datasets are automatically standardized to have consistent text format, handling different field names and combining question-answer pairs intelligently.
 
@@ -248,7 +248,7 @@ python inference_gguf.py --model quantized_models/hcho-q4_k_m.gguf --prompt "The
    - Colab T4 (free): 3-4 hours
    - Colab V100 (Pro): 1-2 hours
    - Colab A100 (Pro): 45-60 minutes
-2. **Dataset Size**: 717 million tokens (4.4 tokens per parameter)
+2. **Dataset Size**: 179 million tokens (2.0 tokens per parameter)
 3. **Memory Management**: Monitor RAM usage during training
 4. **Checkpointing**: Regular checkpoints prevent data loss
 
