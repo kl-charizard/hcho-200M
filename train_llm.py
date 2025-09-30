@@ -278,11 +278,15 @@ class LLMTrainer:
         self.model.eval()
         total_loss = 0
         num_batches = 0
+        max_eval_batches = 50  # Limit evaluation for speed
         
         with torch.no_grad():
             for batch_idx, batch in enumerate(self.eval_dataloader):
-                if batch_idx % 100 == 0:
-                    logger.info(f"   Evaluation batch {batch_idx}")
+                if batch_idx >= max_eval_batches:
+                    break
+                    
+                if batch_idx % 10 == 0:
+                    logger.info(f"   Evaluation batch {batch_idx}/{max_eval_batches}")
                 
                 outputs = self.model(
                     input_ids=batch['input_ids'],
