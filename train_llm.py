@@ -274,12 +274,16 @@ class LLMTrainer:
     
     def evaluate(self):
         """Evaluate the model"""
+        logger.info("🔄 Starting evaluation...")
         self.model.eval()
         total_loss = 0
         num_batches = 0
         
         with torch.no_grad():
-            for batch in self.eval_dataloader:
+            for batch_idx, batch in enumerate(self.eval_dataloader):
+                if batch_idx % 100 == 0:
+                    logger.info(f"   Evaluation batch {batch_idx}")
+                
                 outputs = self.model(
                     input_ids=batch['input_ids'],
                     attention_mask=batch.get('attention_mask'),
