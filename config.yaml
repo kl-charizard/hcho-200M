@@ -5,17 +5,17 @@ model:
   name: "hcho-200m"
   architecture: "gpt-neo"
   vocab_size: 50257
-  hidden_size: 768
-  num_layers: 12
-  num_heads: 12
+  hidden_size: 512  # Reduced from 768
+  num_layers: 8     # Reduced from 12
+  num_heads: 8      # Reduced from 12
   max_position_embeddings: 1024
-  intermediate_size: 3072
+  intermediate_size: 2048  # Reduced from 3072
   dropout: 0.1
   activation: "gelu"
 
 training:
-  batch_size: 4  # Larger batch size for MacBook CPU/GPU
-  gradient_accumulation_steps: 4  # Effective batch size = 16
+  batch_size: 2  # Reduced for GPU memory
+  gradient_accumulation_steps: 8  # Effective batch size = 16
   learning_rate: 3e-4
   num_epochs: 5
   warmup_steps: 500
@@ -23,9 +23,9 @@ training:
   max_grad_norm: 1.0
   
   # Memory optimization
-  fp16: false  # Disable FP16 for MacBook compatibility
-  gradient_checkpointing: false  # Not needed for small model
-  dataloader_num_workers: 2
+  fp16: true  # Enable FP16 for GPU memory savings
+  gradient_checkpointing: true  # Enable for memory savings
+  dataloader_num_workers: 0  # Reduce for memory
   
   # Checkpointing
   save_steps: 1000
@@ -35,7 +35,7 @@ training:
 
 data:
   dataset_name: "openwebtext"  # Will fallback to smaller datasets
-  max_length: 2048  # Much longer sequences for maximum tokens
+  max_length: 512  # Reduced for GPU memory
   train_split: 0.9
   eval_split: 0.1
   
@@ -43,9 +43,11 @@ data:
   preprocessing:
     remove_duplicates: true
     min_length: 50
-    max_length: 2048
 
+# Memory optimization settings
 optimization:
+  cpu_offload: false  # Set to true for extreme memory savings
+  empty_cache_steps: 100  # Clear GPU cache every N steps
   # DeepSpeed ZeRO optimization for memory efficiency
   deepspeed_config: "ds_config.json"
   

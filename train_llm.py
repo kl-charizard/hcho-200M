@@ -84,7 +84,8 @@ class LLMTrainer:
             gradient_accumulation_steps=self.config['training']['gradient_accumulation_steps'],
             mixed_precision='fp16' if self.config['training']['fp16'] else 'no',
             log_with='wandb' if self.config['logging']['use_wandb'] else None,
-            project_dir=self.config['output']['log_dir']
+            project_dir=self.config['output']['log_dir'],
+            cpu_offload=self.config['optimization'].get('cpu_offload', False)
         )
         
         logger.info(f"✅ Accelerator setup complete")
@@ -205,6 +206,9 @@ class LLMTrainer:
             leave=True
         )
         
+        # Memory management
+        empty_cache_steps = self.config['optimization'].get('empty_cache_steps', 100)
+        
         for batch_idx, batch in enumerate(progress_bar):
             with self.accelerator.accumulate(self.model):
                 # Forward pass
@@ -235,6 +239,11 @@ class LLMTrainer:
                 total_loss += loss.item()
                 num_batches += 1
                 self.global_step += 1
+                
+                # Memory management - clear cache periodically
+                if batch_idx % empty_cache_steps == 0:
+                    if torch.cuda.is_available():
+                        torch.cuda.empty_cache()
                 
                 # Update progress bar
                 avg_loss = total_loss / num_batches

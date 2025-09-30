@@ -135,12 +135,12 @@ hcho-200M/
 
 ## 🏗️ Model Architecture
 
-- **Parameters**: ~163 million (optimized for MacBook)
+- **Parameters**: ~89 million (GPU memory optimized)
 - **Architecture**: GPT-style transformer
-- **Hidden Size**: 768
-- **Layers**: 12
-- **Attention Heads**: 12
-- **Context Length**: 2048 tokens (increased for better learning)
+- **Hidden Size**: 512
+- **Layers**: 8
+- **Attention Heads**: 8
+- **Context Length**: 512 tokens (memory optimized)
 - **Vocabulary Size**: 50,257
 
 ## 💾 Memory Optimizations
