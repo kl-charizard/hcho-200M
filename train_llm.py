@@ -84,8 +84,7 @@ class LLMTrainer:
             gradient_accumulation_steps=self.config['training']['gradient_accumulation_steps'],
             mixed_precision='fp16' if self.config['training']['fp16'] else 'no',
             log_with='wandb' if self.config['logging']['use_wandb'] else None,
-            project_dir=self.config['output']['log_dir'],
-            gradient_clip_norm=self.config['training']['max_grad_norm']
+            project_dir=self.config['output']['log_dir']
         )
         
         logger.info(f"✅ Accelerator setup complete")
@@ -223,7 +222,14 @@ class LLMTrainer:
                 # Backward pass
                 self.accelerator.backward(loss)
                 
-                # Optimizer step (Accelerate handles gradient clipping automatically)
+                # Gradient clipping (only if not using mixed precision)
+                if self.config['training']['max_grad_norm'] > 0 and not self.config['training']['fp16']:
+                    torch.nn.utils.clip_grad_norm_(
+                        self.model.parameters(),
+                        self.config['training']['max_grad_norm']
+                    )
+                
+                # Optimizer step
                 self.optimizer.step()
                 self.scheduler.step()
                 self.optimizer.zero_grad()
