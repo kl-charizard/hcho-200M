@@ -84,8 +84,7 @@ class LLMTrainer:
             gradient_accumulation_steps=self.config['training']['gradient_accumulation_steps'],
             mixed_precision='fp16' if self.config['training']['fp16'] else 'no',
             log_with='wandb' if self.config['logging']['use_wandb'] else None,
-            project_dir=self.config['output']['log_dir'],
-            cpu_offload=self.config['optimization'].get('cpu_offload', False)
+            project_dir=self.config['output']['log_dir']
         )
         
         logger.info(f"✅ Accelerator setup complete")
