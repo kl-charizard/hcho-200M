@@ -1,0 +1,32 @@
+# Core ML libraries (MacBook optimized)
+torch>=2.0.0
+torchvision>=0.15.0
+torchaudio>=2.0.0
+transformers>=4.30.0
+datasets>=2.12.0
+tokenizers>=0.13.0
+accelerate>=0.20.0
+wandb>=0.15.0
+numpy>=1.24.0
+tqdm>=4.65.0
+scipy>=1.10.0
+scikit-learn>=1.3.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+pandas>=2.0.0
+requests>=2.31.0
+huggingface-hub>=0.16.0
+safetensors>=0.3.0
+einops>=0.6.0
+
+# GGUF quantization dependencies (MacBook compatible)
+gguf>=0.5.0
+llama-cpp-python>=0.2.0
+optimum>=1.12.0
+
+# Optional: Remove heavy dependencies for MacBook
+# deepspeed>=0.9.0  # Not needed for 200M model
+# flash-attn>=2.3.0  # Not compatible with MacBook
+# xformers>=0.0.20  # Not compatible with MacBook
+# auto-gptq>=0.4.0  # Not needed for basic quantization
+# bitsandbytes>=0.41.0  # Not compatible with MacBook
