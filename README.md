@@ -5,12 +5,12 @@ A complete implementation for training hcho-200M, a 163-million parameter Large 
 ## ✨ Features
 
 - **🚀 Multiple Platforms**: MacBook, Google Colab, Windows, Linux
-- **📊 Massive Dataset**: 1.1 billion tokens from 10+ diverse datasets
+- **📊 Massive Dataset**: 717 million tokens from 6+ diverse datasets with smart standardization
 - **⚡ GPU Acceleration**: Apple Silicon MPS, CUDA, CPU fallback
 - **📈 Progress Monitoring**: Real-time progress bars with speed and loss
 - **🔧 Easy Setup**: One-click installation and training
 - **💾 Model Quantization**: GGUF support for efficient deployment
-- **🎯 Optimized**: 6.9 tokens per parameter for effective training
+- **🎯 Optimized**: 4.4 tokens per parameter for effective training
 - **📱 Mobile Ready**: Quantized models for mobile deployment
 
 ## 🚀 Quick Start
@@ -114,22 +114,22 @@ A complete implementation for training hcho-200M, a 163-million parameter Large 
 
 ```
 hcho-200M/
-├── config.yaml              # Training configuration (200M model)
+├── config.yaml              # Training configuration (163M model)
 ├── ds_config.json           # DeepSpeed configuration
-├── requirements.txt         # Python dependencies (MacBook optimized)
+├── requirements.txt         # Python dependencies (optimized)
 ├── setup.py                 # Automatic setup script
 ├── setup_macbook.sh         # MacBook setup script
-├── setup_windows.bat        # Windows setup script
+├── setup_colab.py           # Google Colab setup script
 ├── run_training_macbook.sh  # MacBook training script
-├── run_training.bat         # Windows training script
 ├── quantize_and_run_macbook.sh # MacBook quantization and inference
-├── quantize_and_run.bat     # Windows quantization and inference
 ├── train_llm.py            # Main training script
-├── model.py                 # 200M parameter model implementation
-├── data_loader.py           # Dataset loading and preprocessing
+├── model.py                 # 163M parameter model implementation
+├── data_loader.py           # Smart dataset loading with standardization
 ├── quantize_gguf.py         # GGUF quantization script
 ├── inference_gguf.py        # GGUF model inference
 ├── monitor.py               # Training monitoring
+├── hcho_200m_colab.ipynb   # Google Colab notebook
+├── .gitignore              # Git ignore file
 └── README.md               # This file
 ```
 
@@ -155,19 +155,19 @@ The implementation includes several memory optimization techniques for MacBook a
 
 ## 📊 Datasets
 
-The training script automatically loads multiple large datasets:
+The training script automatically loads multiple large datasets with smart feature standardization:
 
 - **WikiText-103**: 100,000 samples (main dataset)
-- **WikiText-2**: 50,000 samples
-- **SQuAD**: Question-answer pairs
-- **IMDB**: Movie reviews
-- **AG News**: News articles
-- **Yelp Reviews**: Customer reviews
-- **Amazon Polarity**: Product reviews
-- **GLUE SST-2**: Sentiment analysis
+- **SQuAD**: 50,000 question-answer pairs (combined as text)
+- **AG News**: 50,000 news articles
+- **Yelp Reviews**: 50,000 customer reviews
+- **Amazon Polarity**: 50,000 product reviews
+- **GLUE SST-2**: 50,000 sentiment analysis texts
 - **Fallback**: 50,000 sample texts if online datasets fail
 
-**Total Training Data**: ~1.1 billion tokens (6.9 tokens per parameter)
+**Total Training Data**: ~350,000 samples × 2,048 tokens = **~717 million tokens** (4.4 tokens per parameter)
+
+**Note**: All datasets are automatically standardized to have consistent text format, handling different field names and combining question-answer pairs intelligently.
 
 ## ⚙️ Configuration
 
@@ -248,7 +248,7 @@ python inference_gguf.py --model quantized_models/hcho-q4_k_m.gguf --prompt "The
    - Colab T4 (free): 3-4 hours
    - Colab V100 (Pro): 1-2 hours
    - Colab A100 (Pro): 45-60 minutes
-2. **Dataset Size**: 1.1 billion tokens (6.9 tokens per parameter)
+2. **Dataset Size**: 717 million tokens (4.4 tokens per parameter)
 3. **Memory Management**: Monitor RAM usage during training
 4. **Checkpointing**: Regular checkpoints prevent data loss
 
@@ -270,6 +270,8 @@ python inference_gguf.py --model quantized_models/hcho-q4_k_m.gguf --prompt "The
 - Check internet connection
 - Verify dataset availability
 - Use sample datasets for testing
+- **Feature alignment errors**: Fixed automatically with smart dataset standardization
+- **SQuAD format**: Question-answer pairs are automatically combined into text format
 
 ## 📝 License
 
