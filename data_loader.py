@@ -84,9 +84,35 @@ class LLMDataLoader:
             datasets.append(sample_dataset)
             logger.info(f"✅ Created sample dataset with {len(sample_dataset)} samples")
         
-        # Combine datasets
+        # Standardize dataset features before combining
+        logger.info("🔄 Standardizing dataset features...")
+        standardized_datasets = []
+        for i, dataset in enumerate(datasets):
+            try:
+                # Remove all columns except text and create standardized format
+                if 'text' in dataset.column_names:
+                    # Already has text column
+                    standardized_dataset = dataset.remove_columns([col for col in dataset.column_names if col != 'text'])
+                else:
+                    # Need to preprocess to create text column
+                    standardized_dataset = dataset.map(
+                        self.preprocess_text,
+                        batched=True,
+                        remove_columns=dataset.column_names
+                    )
+                standardized_datasets.append(standardized_dataset)
+                logger.info(f"✅ Standardized dataset {i+1}: {len(standardized_dataset)} samples")
+            except Exception as e:
+                logger.warning(f"⚠️  Failed to standardize dataset {i+1}: {e}")
+                continue
+        
+        if not standardized_datasets:
+            logger.error("❌ No datasets could be standardized!")
+            raise RuntimeError("No datasets available after standardization")
+        
+        # Combine standardized datasets
         logger.info("🔄 Combining datasets...")
-        combined_dataset = concatenate_datasets(datasets)
+        combined_dataset = concatenate_datasets(standardized_datasets)
         
         # Split into train/eval
         train_size = int(len(combined_dataset) * self.config['data']['train_split'])
@@ -100,8 +126,22 @@ class LLMDataLoader:
         return train_dataset, eval_dataset
     
     def preprocess_text(self, examples: Dict[str, List[str]]) -> Dict[str, List[str]]:
-        """Preprocess text data"""
-        texts = examples['text'] if 'text' in examples else examples['content']
+        """Preprocess text data and standardize features"""
+        # Handle different text field names
+        if 'text' in examples:
+            texts = examples['text']
+        elif 'content' in examples:
+            texts = examples['content']
+        elif 'question' in examples and 'context' in examples:
+            # For SQuAD, combine question and context
+            texts = [f"Question: {q} Context: {c}" for q, c in zip(examples['question'], examples['context'])]
+        else:
+            # Fallback: try to find any text field
+            text_fields = [k for k in examples.keys() if 'text' in k.lower() or 'content' in k.lower()]
+            if text_fields:
+                texts = examples[text_fields[0]]
+            else:
+                texts = [str(v) for v in examples.values() if isinstance(v, list) and len(v) > 0][0]
         
         processed_texts = []
         for text in texts:
@@ -152,21 +192,8 @@ class LLMDataLoader:
         if self.tokenizer is None:
             raise ValueError("Tokenizer not set up. Call setup_tokenizer() first.")
         
-        # Load datasets
+        # Load datasets (already preprocessed and standardized)
         train_dataset, eval_dataset = self.load_datasets()
-        
-        # Preprocess
-        logger.info("🔄 Preprocessing datasets...")
-        train_dataset = train_dataset.map(
-            self.preprocess_text,
-            batched=True,
-            remove_columns=train_dataset.column_names
-        )
-        eval_dataset = eval_dataset.map(
-            self.preprocess_text,
-            batched=True,
-            remove_columns=eval_dataset.column_names
-        )
         
         # Tokenize
         logger.info("🔄 Tokenizing datasets...")
